@@ -1,5 +1,6 @@
 <template>
     <div class="calculator">
+        <div class="history">{{history || ''}}</div>
         <div class="display">{{current || '0'}}</div>
         <div @click="clear" class="btn">C</div>
         <div @click="sign" class="btn">+/-</div>
@@ -31,11 +32,13 @@
                 current: '',
                 operator: null,
                 operatorClicked: false,
+                history: '',
             }
         },
         methods: {
             clear() {
                 this.current = '';
+                this.history = '';
             },
             sign() {
                 this.current = this.current.charAt(0) === '-' ?
@@ -45,6 +48,9 @@
                 this.current = `${parseFloat(this.current) / 100}`;
             },
             append(number) {
+                if (this.previous === null) {
+                    this.history = '';
+                }
                 if (this.operatorClicked) {
                     this.current = '';
                     this.operatorClicked = false;
@@ -57,31 +63,49 @@
                     this.append('.');
                 }
             },
-            setPrevious(){
+            setPrevious() {
                 this.previous = this.current;
                 this.operatorClicked = true;
             },
+            setHistory(operator) {
+                this.history += `${this.current} ${operator} `;
+                this.current = (this.previous !== null) ? `${this.operator(
+                    parseFloat(this.previous), parseFloat(this.current)
+                )}` : `${this.operator(
+                    0, parseFloat(this.current)
+                )}`;
+            },
             divide() {
                 this.operator = (a, b) => a / b;
+                this.setHistory('/');
                 this.setPrevious();
+
             },
             times() {
                 this.operator = (a, b) => a * b;
+                this.setHistory('*');
                 this.setPrevious();
+
             },
             minus() {
                 this.operator = (a, b) => a - b;
+                this.setHistory('-');
                 this.setPrevious();
+
             },
             add() {
                 this.operator = (a, b) => a + b;
+                this.setHistory('+');
                 this.setPrevious();
+
             },
             equal() {
-                this.current = `${this.operator(
+                this.setHistory('=');
+                /*this.current = `${this.operator(
                     parseFloat(this.previous), parseFloat(this.current)
-                )}`;
+                )}`;*/
                 this.previous = null;
+
             }
         }
     }
@@ -96,12 +120,24 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-auto-rows: minmax(50px, auto);
+        cursor: pointer;
+    }
+
+    .history {
+        grid-column: 1/5;
+        background-color: #333;
+        color: lightgrey;
+        text-align: right;
+        padding: 20px 20px;
+        font-size: 20px;
     }
 
     .display {
         grid-column: 1/5;
         background-color: #333;
         color: white;
+        text-align: right;
+        padding-right: 20px;
     }
 
     .zero {
