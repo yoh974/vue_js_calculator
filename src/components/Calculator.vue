@@ -45,12 +45,12 @@
                 this.current = `${parseFloat(this.current) / 100}`;
             },
             append(number) {
-                if(this.operatorClicked){
-                    this.current='';
+                if (this.operatorClicked) {
+                    this.current = '';
                     this.operatorClicked = false;
                 }
-                this.current = (this.current === '0' && number === '0') ? '0' :
-                    `${this.current}${number}`;
+                this.current = (this.current === '0' && number === '0') ? '' :
+                    (this.current !== '0') ? `${this.current}${number}` : `${number}`;
             },
             dot() {
                 if (this.current.indexOf('.') === -1) {
