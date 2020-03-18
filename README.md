@@ -23,3 +23,5 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 # vue_js_calculator
+
+From this tutorial [Build a Calculator with Vue.js](https://www.youtube.com/watch?v=m1_ih43p24s)
